@@ -1,0 +1,14 @@
+{
+  "profiles": {
+    "GeogebraDataExtractor": {
+      "commandName": "Project",
+      "commandLineArgs": "testpoints.ggb -o test.txt",
+      "workingDirectory": "G:\\Desktop-Development\\GeogebraDataExtractor\\TestingFiles"
+    },
+    "GeogebraDataExtractorCSV": {
+      "commandName": "Project",
+      "commandLineArgs": "testpoints.ggb -o test.csv",
+      "workingDirectory": "G:\\Desktop-Development\\GeogebraDataExtractor\\TestingFiles"
+    }
+  }
+}
