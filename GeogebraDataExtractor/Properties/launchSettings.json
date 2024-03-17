@@ -9,6 +9,11 @@
       "commandName": "Project",
       "commandLineArgs": "testpoints.ggb -o test.csv",
       "workingDirectory": "G:\\Desktop-Development\\GeogebraDataExtractor\\TestingFiles"
+    },
+    "GeogebraDataExtractorFormat": {
+      "commandName": "Project",
+      "commandLineArgs": "testpoints.ggb -o test.txt -f maple",
+      "workingDirectory": "G:\\Desktop-Development\\GeogebraDataExtractor\\TestingFiles"
     }
   }
 }

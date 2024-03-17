@@ -5,68 +5,74 @@ using System.CommandLine.Invocation;
 
 public class Program
 {
-    public static void Main(string[] args)
+    public static int Main(string[] args)
     {
-        if (args.Length == 0)
+        var ggbfileArgument = new Argument<FileInfo>() { 
+            Name = "ggbfile",
+            Description = "The ggb file to extract data from",
+            Arity = ArgumentArity.ExactlyOne
+        };
+
+        var outputOption = new Option<FileInfo?>(
+			new[]{ "--output","-o" },
+            description: "the file to output it to"
+        );
+
+		var formatOption = new Option<string?>(
+			new[] { "--format", "-f" },
+			description: "format specifier, use one of preset formats for " +
+			"txt: [xyarrays, wolabel, maple]"
+			);
+
+
+        var rootCommand = new RootCommand("A simple commandline solution for extracting data from ggb files");
+        rootCommand.AddArgument(ggbfileArgument);
+        rootCommand.AddOption(outputOption);
+		rootCommand.AddOption(formatOption);
+
+        rootCommand.SetHandler((ggbfile, output, format) =>
         {
-            Console.WriteLine("No arguments provided.");
-            return;
-        }
+			RunProgram(ggbfile, output, format);
+		}, ggbfileArgument, outputOption, formatOption);
 
-        string ggbfile = args[0];
-
-        string output = null;
-        // Check if the second argument is provided and is an output option
-        if (args.Length > 1 && (args[1] == "-o" || args[1] == "--output"))
-        {
-            // Check if there's a third argument which is the output value
-            if (args.Length > 2)
-            {
-                output = args[2];
-                if (!output.Contains('.'))
-                {
-                    Console.WriteLine("Output is not a valid filename (missing extension)!");
-                    return;
-                }
-            }
-            else
-            {
-                Console.WriteLine("Output option provided but no output value specified.");
-                return;
-            }
-        }
-
-        var reader = new GGBReader(ggbfile);
-
-        if(output == null)
-        {
-            //simple menu, with console outputs.
-            return;
-        }
-        string fileExtension = Path.GetExtension(output)?.ToLower().TrimStart('.')!;
-        Console.WriteLine($"file Extension: {fileExtension}");
-        OutputType outputType;
-        switch (fileExtension)
-        {
-            case "xlsx":
-                Console.WriteLine("Excel is currently not supported");
-                return;
-                //outputType = OutputType.Excel;
-                //break;
-            case "csv":
-                outputType = OutputType.Csv;
-                break;
-            case "txt":
-                outputType = OutputType.Txt;
-                break;
-
-            default:
-                Console.WriteLine("Unsupported Output Type");
-                return;
-        }
-
-        var outputdata = new Output(outputType);
-        outputdata.SetPoints(reader.GetPoints());
-        outputdata.CreateFile(output);
+        return rootCommand.Invoke(args);
     }
+
+
+    static void RunProgram(FileInfo ggbfile, FileInfo output, string format)
+    {
+		var reader = new GGBReader(ggbfile.FullName);
+
+		if (output == null)
+		{
+			//simple menu, with console outputs.
+			return;
+		}
+		string fileExtension = output.Extension.TrimStart('.');
+		OutputType outputType;
+		switch (fileExtension)
+		{
+			case "xlsx":
+				Console.WriteLine("Excel is not supported, use csv instead and import it.");
+				return;
+			//outputType = OutputType.Excel;
+			//break;
+			case "csv":
+				outputType = OutputType.Csv;
+				break;
+			case "txt":
+				outputType = OutputType.Txt;
+				break;
+
+			default:
+				Console.WriteLine("Unsupported Output Type");
+				return;
+		}
+
+		var outputdata = new Output(outputType);
+		if(format != null)
+			outputdata.Format = format;
+		outputdata.SetPoints(reader.GetPoints());
+		outputdata.CreateFile(output.FullName);
+	}
 }
