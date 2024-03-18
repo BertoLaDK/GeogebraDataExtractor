@@ -13,12 +13,19 @@ namespace Common
 		}
 
 		public string Name { get; set; }
-        public double X { get; set; }
-        public double Y { get; set; }
+		public double X { get; set; }
+		public double Y { get; set; }
 
-		public override string ToString()
+		public string ToString(bool withoutName = false)
 		{
-			return $"{Name}: ({X};{Y})";
+			if (withoutName)
+			{
+				return $"({X};{Y})";
+			}
+			else
+			{
+				return $"{Name}: ({X};{Y})";
+			}
 		}
-    }
+	}
 }

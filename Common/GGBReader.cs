@@ -8,9 +8,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
-namespace GeogebraDataExtractor
+namespace Common
 {
-    internal class GGBReader
+    public class GGBReader
     {
         public GGBRoot XmlRoot { get; set; }
         public GGBReader(string filename)

@@ -1,5 +1,4 @@
 ﻿using Common;
-using GeogebraDataExtractor;
 using System.CommandLine;
 using System.CommandLine.Invocation;
 
